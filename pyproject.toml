@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "grover-app"
+version = "0.1.0"
+description = ""
+authors = ["Evandro Chagas Ribeiro da Rosa <evandro@quantuloop.com>"]
+readme = "README.md"
+packages = [{include = "grover_app", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+ket-lang = "^0.6.1"
+pandas = "^2.0.3"
+plotly = "^5.15.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
