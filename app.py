@@ -3,10 +3,26 @@ import streamlit as st
 import plotly.express as px
 import grover_app
 
+st.set_page_config(
+    page_title="Grupo de Computação Quântica",
+    page_icon="logo_gcq.jpeg",
+    initial_sidebar_state="expanded"
+)
+
 
 @st.cache_data
-def classical_vs_quantum_df(max_input, classical_speed):
-    entradas = list(range(2, max_input))
+def grover_df(*args):
+    return grover_app.grover_df(*args)
+
+
+@st.cache_data
+def grover_step_by_step_df(*args):
+    return grover_app.grover_step_by_step_df(*args)
+
+
+@st.cache_data
+def classical_vs_quantum_df(max_input, step, classical_speed):
+    entradas = list(range(2, max_input, step))
     return {
         "Tamanho da Entrada": [*entradas, *entradas],
         "Tempo": [
@@ -21,36 +37,55 @@ def classical_vs_quantum_df(max_input, classical_speed):
 
 
 "# Computação Quântica"
-"## Algoritmo Quântico de Busca (_Grover_)"
+st.sidebar.image("logo_gcq.jpeg")
+st.sidebar.title("Grupo de Computação Quântica - UFSC")
 
-"### Desempenho Clássico Vs. Quântico"
+st.image(
+    "https://newsroom.ibm.com/file.php/183868/IBM_SystemOne_Andrew_Lindemann_2-1500.jpg?thumbnail=modal",
+    use_column_width=True,
+    caption="Fonte: https://newsroom.ibm.com",
+)
+
+"# Algoritmo Quântico de Busca (_Algoritmo de Grover_)"
+"## Desempenho Clássico Vs. Quântico"
 
 plot_performance = st.container()
-classical_speed = st.slider("Computador clássico X vezes mais rápido", 1.0, 15.0, 10.0)
+classical_speed = st.slider("Performance to computador clássico", 5_000, 15_000, 10_000)
+classical_speed_str = f"{classical_speed:,}x".replace(",", ".")
 plot_performance.plotly_chart(
     px.line(
-        classical_vs_quantum_df(1 << 10, classical_speed),
+        classical_vs_quantum_df(1_000_000_000, 1_000_000, classical_speed),
         x="Tamanho da Entrada",
         y="Tempo",
         color="Modelo de Computação",
+        title=f"Tempo de computação com computador clássico {classical_speed_str} mais rápido que o quântico.",
     ),
     use_container_width=True,
 )
 
+st.divider()
 
-"### Demonstração"
+"# Demonstração"
+"Parâmetros da demostração"
 
 config_columns = st.columns(2)
-
 with config_columns[0]:
     len_itens = st.slider("Numero de itens", 1, (1 << 8) - 1, (1 << 4) - 1)
     num_qubits = len_itens.bit_length()
 with config_columns[1]:
     search_for = st.slider("Procurar por", 0, len_itens, len_itens // 2)
 
-f"""
-#### Programação Quântica
+"## Programação Quântica"
 
+logo, text = st.columns([1, 4])
+with logo:
+    st.image("https://quantumket.org/_static/ket.svg", use_column_width=True)
+with text:
+    "### Plataforma de programação quântica desenvolvida no GCQ-UFSC"
+"<https://quantumket.org>"
+
+
+f"""
 ```py
 from math import pi, sqrt
 from ket import *
@@ -67,13 +102,13 @@ def grover(n, oracle):
 print("Resultado =", grover(n={num_qubits}, oracle=phase_on({search_for})).value)
 # Resultado = {search_for}
 ```
-    """
+"""
 
-"#### Execução Quântica"
+"## Execução Quântica"
 
-prob_all, prob_right = grover_app.grover_df(num_qubits, search_for)
+prob_all, prob_right = grover_df(num_qubits, search_for)
 
-"##### Probabilidade a cada passo de computação"
+"### Probabilidade a cada passo de computação"
 
 st.plotly_chart(
     px.bar(
@@ -81,6 +116,7 @@ st.plotly_chart(
         x="Estado",
         y="Probabilidade (%)",
         animation_frame="Passo",
+        title="Probabilidade de medida de cada estado",
     ),
     use_container_width=True,
 )
@@ -91,16 +127,17 @@ st.plotly_chart(
         x="Estado",
         y="Probabilidade (%)",
         animation_frame="Passo",
+        title="Probabilidade de medida do estado certo",
     ),
     use_container_width=True,
 )
 
 
-"##### Evolução do estado quântico"
+"## Evolução do estado quântico (Computação)"
 
 st.plotly_chart(
     px.bar(
-        grover_app.grover_step_by_step_df(num_qubits, search_for),
+        grover_step_by_step_df(num_qubits, search_for),
         x="Estado",
         y="Probabilidade (%)",
         animation_frame="Operação",
