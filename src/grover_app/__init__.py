@@ -81,7 +81,7 @@ def grover_step_by_step_df(num_qubits, search_for):
     dump_states_step_by_step = grover_step_by_step(num_qubits, phase_on(search_for))
     return {
         "Estado": [s for _ in dump_states_step_by_step for s in range(1 << num_qubits)],
-        "Probabilidade (%)": [
+        "Probabilidade": [
             abs(d.get_quantum_state()[s]) if s in d.get_quantum_state() else 0.0
             for d in dump_states_step_by_step
             for s in range(1 << num_qubits)

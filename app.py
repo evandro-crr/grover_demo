@@ -6,7 +6,7 @@ import grover_app
 st.set_page_config(
     page_title="Grupo de Computação Quântica",
     page_icon="logo_gcq.jpeg",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
 )
 
 
@@ -36,9 +36,13 @@ def classical_vs_quantum_df(max_input, step, classical_speed):
     }
 
 
-"# Computação Quântica"
 st.sidebar.image("logo_gcq.jpeg")
 st.sidebar.title("Grupo de Computação Quântica - UFSC")
+st.sidebar.divider()
+st.sidebar.markdown("## Acesse o app com o QR Code")
+st.sidebar.image("qr-code.png", use_column_width=True)
+
+"# Computação Quântica"
 
 st.image(
     "https://newsroom.ibm.com/file.php/183868/IBM_SystemOne_Andrew_Lindemann_2-1500.jpg?thumbnail=modal",
@@ -117,6 +121,7 @@ st.plotly_chart(
         y="Probabilidade (%)",
         animation_frame="Passo",
         title="Probabilidade de medida de cada estado",
+        range_y=(0, 100),
     ),
     use_container_width=True,
 )
@@ -128,6 +133,7 @@ st.plotly_chart(
         y="Probabilidade (%)",
         animation_frame="Passo",
         title="Probabilidade de medida do estado certo",
+        range_y=(0, 100),
     ),
     use_container_width=True,
 )
@@ -139,10 +145,11 @@ st.plotly_chart(
     px.bar(
         grover_step_by_step_df(num_qubits, search_for),
         x="Estado",
-        y="Probabilidade (%)",
+        y="Probabilidade",
         animation_frame="Operação",
         color="Fase",
         range_color=(-pi, pi),
+        range_y=(0, 1.0),
     ),
     use_container_width=True,
 )
