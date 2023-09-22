@@ -5,7 +5,7 @@ import grover_app
 
 st.set_page_config(
     page_title="Grupo de Computação Quântica",
-    page_icon="logo_gcq.jpeg",
+    page_icon="gcq.png",
     initial_sidebar_state="expanded",
 )
 
@@ -36,7 +36,7 @@ def classical_vs_quantum_df(max_input, step, classical_speed):
     }
 
 
-st.sidebar.image("logo_gcq.jpeg")
+st.sidebar.image("gcq.png")
 st.sidebar.title("Grupo de Computação Quântica - UFSC")
 st.sidebar.divider()
 st.sidebar.markdown("## Acesse o app com o QR Code")
@@ -83,7 +83,7 @@ with config_columns[1]:
 
 logo, text = st.columns([1, 4])
 with logo:
-    st.image("https://quantumket.org/_static/ket.svg", use_column_width=True)
+    st.image("ket.png", use_column_width=True)
 with text:
     "### Plataforma de programação quântica desenvolvida no GCQ-UFSC"
 "<https://quantumket.org>"
