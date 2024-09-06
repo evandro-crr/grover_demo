@@ -94,16 +94,20 @@ f"""
 from math import pi, sqrt
 from ket import *
 
-def grover(n, oracle):
-    qubits = quant(n)
+
+def grover(qubits: Quant, oracle):
     H(qubits)
-    for _ in range(int((pi / 4) * sqrt(2**n / m))):
+    for _ in range(int((pi / 4) * sqrt(2 ** len(qubits)))):
         oracle(qubits)
-        with around([H, X], qubits):
-            ctrl(qubits[1:], Z, qubits[0])
+        with around(cat(H, X), qubits):
+            ctrl(qubits[1:], Z)(qubits[0])
     return measure(qubits)
 
-print("Resultado =", grover(n={num_qubits}, oracle=phase_on({search_for})).value)
+
+process = Process()
+qubits = process.alloc({num_qubits})
+
+print("Resultado =", grover(qubits, lib.phase_oracle({search_for})).get())
 # Resultado = {search_for}
 ```
 """
